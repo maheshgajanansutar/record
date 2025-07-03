@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>रेकॉर्ड शोध (Record Search)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background-color: #1a5276;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        main {
+            padding: 20px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            align-items: flex-end;
+        }
+
+        .filter-item {
+            display: flex;
+            flex-direction: column;
+            min-width: 180px;
+            flex: 1;
+        }
+
+        .filter-item label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .filter-item select, .filter-item input {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: #fdfdfd;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .filter-item select:focus, .filter-item input:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+            outline: none;
+        }
+
+        .search-container {
+            position: relative;
+            flex: 2;
+        }
+
+        .search-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-wrapper input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        #search-button, #reset-button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        #search-button:hover, #reset-button:hover {
+            background-color: #1a5276;
+            transform: translateY(-2px);
+        }
+
+        .button-container {
+            display: flex;
+            align-items: flex-end;
+        }
+
+        #name-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 10;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        #name-suggestions div {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+
+        #name-suggestions div:last-child {
+            border-bottom: none;
+        }
+
+        #name-suggestions div:hover {
+            background-color: #ecf0f1;
+        }
+
+        .results {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        td a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        td a:hover {
+            text-decoration: underline;
+            color: #1a5276;
+        }
+
+        /* PDF Viewer Modal Styles */
+        .pdf-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pdf-modal-content {
+            background-color: #fff;
+            border-radius: 10px;
+            width: 90%;
+            height: 90%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .pdf-modal-header {
+            padding: 15px 20px;
+            background-color: #1a5276;
+            color: white;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pdf-modal-header h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0 10px;
+        }
+
+        .pdf-modal-body {
+            flex: 1;
+            padding: 10px;
+        }
+
+        .pdf-viewer {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .view-pdf-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .view-pdf-button:hover {
+            background-color: #1a5276;
+        }
+
+        .view-pdf-button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 20px;
+            }
+            .filter-item, .search-container {
+                flex: none;
+                width: 100%;
+            }
+            .search-wrapper {
+                flex-direction: column;
+                gap: 15px;
+            }
+            #search-button, #reset-button {
+                width: 100%;
+                padding: 12px;
+            }
+            .button-container {
+                width: 100%;
+            }
+            
+            .pdf-modal-content {
+                width: 95%;
+                height: 85%;
+            }
+        }
+    </style>
+    <script src="https://unpkg.com/fuse.js@6.4.6/dist/fuse.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>रेकॉर्ड शोध (Record Search)</h1>
+    </header>
+    <main>
+        <section class="filters">
+            <div class="filter-item">
+                <label for="jilha">जिल्हा (District):</label>
+                <select id="jilha">
+                    <option value="">सर्व (All)</option>
+                    <option value="सिंधुदुर्ग">सिंधुदुर्ग (Sindhudurg)</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <label for="taluka">तालुका (Taluka):</label>
+                <select id="taluka">
+                    <option value="">सर्व (All)</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <label for="gav">गाव (Village):</label>
+                <select id="gav">
+                    <option value="">सर्व (All)</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <label for="varsh">वर्ष (Year):</label>
+                <select id="varsh">
+                    <option value="">सर्व (All)</option>
+                </select>
+            </div>
+            <div class="filter-item search-container">
+                <label for="name-search">नाव शोध (Name Search) (मराठी किंवा इंग्रजीत टाइप करा):</label>
+                <div class="search-wrapper">
+                    <input type="text" id="name-search" placeholder="नाव टाइप करा (Type Name)">
+                    <button id="search-button">शोधा <br> (Search)</button>
+                </div>
+                <div id="name-suggestions"></div>
+            </div>
+            <div class="button-container">
+                <button id="reset-button">रीसेट करा <br> (Reset)</button>
+            </div>
+        </section>
+        <section class="results">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>अ.क्र. (Sr. No.)</th>
+                            <th>तालुका (Taluka)</th>
+                            <th>गाव (Village)</th>
+                            <th>प्रकार (Type)</th>
+                            <th>नाव (Name)</th>
+                            <th>वर्ष (Year)</th>
+                            <th>सर्व्हे.क्र. (Survey No.)</th>
+                            <th>निवासी (Residential)</th>
+                            <th>वाणिज्य (Commercial)</th>
+                            <th>औद्योगिक (Industrial)</th>
+                            <th>डाउनलोड (Download)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results-body">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    
+    <!-- PDF Viewer Modal -->
+    <div class="pdf-modal" id="pdf-modal">
+        <div class="pdf-modal-content">
+            <div class="pdf-modal-header">
+                <h3 id="pdf-title">PDF दस्तऐवज (PDF Document)</h3>
+                <button class="close-modal" id="close-pdf-modal">&times;</button>
+            </div>
+            <div class="pdf-modal-body">
+                <iframe class="pdf-viewer" id="pdf-viewer" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+
+<script>
+const data = [
+    { serialNumber: "1", taluka: "कणकवली", gav: "जानवली", type: "बिनशेती", name: "केशव व्यंकटेश राणे", nameRoman: "Keshav Venkatesh Rane", year: "2005", surveyNumber: "2611", residential: "निवासी", commercial: "", industrial: "", pdfLink: "https://drive.google.com/file/d/1CgPqsXKopXTHo5gng_kYN89ejQO3wts2/view?usp=drivesdk" },
+    { serialNumber: "2", taluka: "कणकवली", gav: "जानवली", type: "बिनशेती", name: "केशव व्यंकटेश राणे", nameRoman: "Keshav Venkatesh Rane", year: "2005", surveyNumber: "2612", residential: "निवासी", commercial: "", industrial: "", pdfLink: "" },
+    { serialNumber: "3", taluka: "कणकवली", gav: "जानवली", type: "बिनशेती", name: "केशव व्यंकटेश राणे", nameRoman: "Keshav Venkatesh Rane", year: "2005", surveyNumber: "2613", residential: "निवासी", commercial: "", industrial: "" },
+    { serialNumber: "4", taluka: "कणकवली", gav: "जानवली", type: "बिनशेती", name: "केशव व्यंकटेश राणे", nameRoman: "Keshav Venkatesh Rane", year: "2005", surveyNumber: "2614", residential: "निवासी", commercial: "", industrial: "" },
+    { serialNumber: "5", taluka: "कणकवली", gav: "जानवली", type: "बिनशेती", name: "केशव व्यंकटेश राणे", nameRoman: "Keshav Venkatesh Rane", year: "2005", surveyNumber: "2615", residential: "निवासी", commercial: "", industrial: "" },
+    { serialNumber: "6", taluka: "कणकवली", gav: "जानवली", type: "बिनशेती", name: "केशव व्यंकटेश राणे", nameRoman: "Keshav Venkatesh Rane", year: "2005", surveyNumber: "2616", residential: "निवासी", commercial: "", industrial: "" },
+    { serialNumber: "7", taluka: "कणकवली", gav: "खारेपाटण", type: "विभाजन", name: "अविनाश श्रीकांत गाडे", nameRoman: "Avinash Shrikant Gade", year: "2018", surveyNumber: "962", residential: "निवासी", commercial: "वाणिज्य", industrial: "", pdfLink: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" },
+    { serialNumber: "8", taluka: "कणकवली", gav: "हरकुळ-बुद्रुक", type: "बिनशेती", name: "भालचंद्र केशव मराठे", nameRoman: "Bhalchandra Keshav Marathe", year: "2019", surveyNumber: "964", residential: "निवासी", commercial: "", industrial: "", pdfLink: "https://www.africau.edu/images/default/sample.pdf" },
+    { serialNumber: "9", taluka: "कणकवली", gav: "कणकवली", type: "बिनशेती", name: "स्वस्तिक बिल्डकॉन तर्फे सतीश सदानंद शिंदे", nameRoman: "Swastik Buildcon through Satish Sadanand Shinde", year: "2015", surveyNumber: "3310", residential: "निवासी", commercial: "", industrial: "", pdfLink: "https://drive.google.com/file/d/1CgPqsXKopXTHo5gng_kYN89ejQO3wts2/view?usp=drivesdk" },
+    { serialNumber: "10", taluka: "कणकवली", gav: "कलमठ", type: "बिनशेती", name: "प्रणाम अरविंद कामत व सुभाष दिनकर परुळेकर", nameRoman: "Pranam Arvind Kamat and Subhash Dinkar Parulekar", year: "2014", surveyNumber: "3222", residential: "निवासी", commercial: "", industrial: "", pdfLink: "https://www.africau.edu/images/default/sample.pdf" },
+    { serialNumber: "11", taluka: "कणकवली", gav: "जानवली", type: "बिनशेती", name: "सुभाष श्रीधर भोसले", nameRoman: "Subhash Shridhar Bhosale", year: "2020", surveyNumber: "966", residential: "निवासी", commercial: "वाणिज्य", industrial: "", pdfLink: "https://drive.google.com/file/d/1CgPqsXKopXTHo5gng_kYN89ejQO3wts2/view?usp=drivesdk" },
+    { serialNumber: "12", taluka: "कणकवली", gav: "वागदे", type: "बिनशेती", name: "चंद्रकांत भगवान शेट्ये", nameRoman: "Chandrakant Bhagwan Shetye", year: "2018", surveyNumber: "3411", residential: "निवासी", commercial: "वाणिज्य", industrial: "", pdfLink: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" },
+    { serialNumber: "13", taluka: "कणकवली", gav: "कणकवली", type: "बिनशेती", name: "नंदकुमार राजाराम आरोलकर", nameRoman: "Nandkumar Rajaram Arolkar", year: "2017", surveyNumber: "3429", residential: "निवासी", commercial: "वाणिज्य", industrial: "", pdfLink: "https://www.africau.edu/images/default/sample.pdf" },
+    { serialNumber: "14", taluka: "कणकवली", gav: "वागदे", type: "बिनशेती", name: "रणजीत दत्तात्रय देसाई", nameRoman: "Ranjit Dattatray Desai", year: "2017", surveyNumber: "252", residential: "निवासी", commercial: "", industrial: "", pdfLink: "https://drive.google.com/file/d/1CgPqsXKopXTHo5gng_kYN89ejQO3wts2/view?usp=drivesdk" },
+    { serialNumber: "15", taluka: "कणकवली", gav: "कणकवली", type: "बिनशेती", name: "विजय भानुकांत हरकुळकर", nameRoman: "Vijay Bhanukant Harkulkar", year: "2017", surveyNumber: "3439", residential: "निवासी", commercial: "", industrial: "", pdfLink: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" },
+    { serialNumber: "16", taluka: "कणकवली", gav: "कलमठ", type: "बिनशेती", name: "प्रभाकर रघुनाथ हरमलकर", nameRoman: "Prabhakar Raghunath Harmalkar", year: "2019", surveyNumber: "3450", residential: "निवासी", commercial: "", industrial: "", pdfLink: "https://www.africau.edu/images/default/sample.pdf" },
+    { serialNumber: "17", taluka: "कणकवली", gav: "जानवली", type: "बिनशेती", name: "तुकाराम गंगाराम खरात", nameRoman: "Tukaram Gangaram Kharat", year: "2020", surveyNumber: "342", residential: "निवासी", commercial: "", industrial: "", pdfLink: "https://drive.google.com/file/d/1CgPqsXKopXTHo5gng_kYN89ejQO3wts2/view?usp=drivesdk" },
+    { serialNumber: "18", taluka: "वैभववाडी", gav: "वाभवे", type: "बिनशेती", name: "बाळकृष्ण विठू राऊळ", nameRoman: "Balkrishna Vithu Raul", year: "2022", surveyNumber: "117", residential: "निवासी", commercial: "", industrial: "", pdfLink: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" },
+    { serialNumber: "19", taluka: "कणकवली", gav: "नरडवे", type: "बिनशेती", name: "पीटर जॉसीन्त डिसोजा", nameRoman: "Peter Jocinth D'Souza", year: "2023", surveyNumber: "129", residential: "निवासी", commercial: "", industrial: "", pdfLink: "https://www.africau.edu/images/default/sample.pdf" },
+    { serialNumber: "20", taluka: "वैभववाडी", gav: "वैभववाडी", type: "बिनशेती", name: "महादेव राजाराम पाटील", nameRoman: "Mahadev Rajaram Patil", year: "2023", surveyNumber: "130", residential: "निवासी", commercial: "", industrial: "", pdfLink: "https://drive.google.com/file/d/1CgPqsXKopXTHo5gng_kYN89ejQO3wts2/view?usp=drivesdk" }
+];
+
+document.addEventListener('DOMContentLoaded', () => {
+    const jilhaSelect = document.getElementById('jilha');
+    const talukaSelect = document.getElementById('taluka');
+    const gavSelect = document.getElementById('gav');
+    const varshSelect = document.getElementById('varsh');
+    const nameSearch = document.getElementById('name-search');
+    const nameSuggestions = document.getElementById('name-suggestions');
+    const searchButton = document.getElementById('search-button');
+    const resetButton = document.getElementById('reset-button');
+    const resultsBody = document.getElementById('results-body');
+    
+    // PDF Modal elements
+    const pdfModal = document.getElementById('pdf-modal');
+    const pdfViewer = document.getElementById('pdf-viewer');
+    const closePdfModal = document.getElementById('close-pdf-modal');
+    const pdfTitle = document.getElementById('pdf-title');
+
+    let selectedJilha = '';
+    let selectedTaluka = '';
+    let selectedGav = '';
+    let selectedVarsh = '';
+    let selectedName = '';
+
+    const fuse = new Fuse(data, {
+        keys: ['nameRoman'],
+        threshold: 0.3,
+    });
+
+    function populateDropdowns() {
+        const uniqueTalukas = [...new Set(data.map(item => item.taluka))].sort();
+        talukaSelect.innerHTML = '<option value="">सर्व (All)</option>' + uniqueTalukas.map(t => `<option value="${t}">${t}</option>`).join('');
+        updateGavOptions();
+        updateVarshOptions();
+    }
+
+    function updateGavOptions() {
+        const filteredData = selectedTaluka ? data.filter(item => item.taluka === selectedTaluka) : data;
+        const uniqueGavs = [...new Set(filteredData.map(item => item.gav))].sort();
+        gavSelect.innerHTML = '<option value="">सर्व (All)</option>' + uniqueGavs.map(g => `<option value="${g}">${g}</option>`).join('');
+    }
+
+    function updateVarshOptions() {
+        let filteredData = data;
+        if (selectedTaluka) filteredData = filteredData.filter(item => item.taluka === selectedTaluka);
+        if (selectedGav) filteredData = filteredData.filter(item => item.gav === selectedGav);
+        const uniqueVarsh = [...new Set(filteredData.map(item => item.year))].sort();
+        varshSelect.innerHTML = '<option value="">सर्व (All)</option>' + uniqueVarsh.map(v => `<option value="${v}">${v}</option>`).join('');
+    }
+
+    nameSearch.addEventListener('input', () => {
+        const searchText = nameSearch.value.trim().toLowerCase();
+        nameSuggestions.innerHTML = '';
+        if (searchText.length > 0) {
+            let suggestions = [];
+            if (/^[a-zA-Z ]*$/.test(searchText)) {
+                const fuseResults = fuse.search(searchText);
+                suggestions = fuseResults.map(result => result.item.name);
+            } else {
+                suggestions = data.filter(item => item.name.toLowerCase().includes(searchText))
+                                  .map(item => item.name);
+            }
+            const uniqueSuggestions = [...new Set(suggestions)].sort();
+            uniqueSuggestions.forEach(name => {
+                const suggestion = document.createElement('div');
+                suggestion.textContent = name;
+                suggestion.addEventListener('click', () => {
+                    nameSearch.value = name;
+                    selectedName = name;
+                    nameSuggestions.innerHTML = '';
+                    filterData();
+                });
+                nameSuggestions.appendChild(suggestion);
+            });
+        } else {
+            selectedName = '';
+            filterData();
+        }
+    });
+
+    function filterData() {
+        const isMarathi = /[\u0900-\u097F]/.test(selectedName);
+        const filteredData = data.filter(item => {
+            const nameMatch = selectedName === '' || 
+                (isMarathi ? item.name.toLowerCase().includes(selectedName.toLowerCase()) : 
+                             item.nameRoman.toLowerCase().includes(selectedName.toLowerCase()));
+            return (selectedJilha === '' || 'सिंधुदुर्ग' === selectedJilha) &&
+                   (selectedTaluka === '' || item.taluka === selectedTaluka) &&
+                   (selectedGav === '' || item.gav === selectedGav) &&
+                   (selectedVarsh === '' || item.year === selectedVarsh) &&
+                   nameMatch;
+        });
+        displayData(filteredData);
+    }
+
+    function displayData(filteredData) {
+        resultsBody.innerHTML = '';
+        if (filteredData.length === 0) {
+            resultsBody.innerHTML = '<tr><td colspan="11">कोणतेही रेकॉर्ड सापडले नाहीत (No records found)</td></tr>';
+        } else {
+            filteredData.forEach(item => {
+                const row = document.createElement('tr');
+                
+                // Create PDF button only if pdfLink exists
+                let pdfButton = '';
+                if (item.pdfLink) {
+                    pdfButton = `<button class="view-pdf-button" data-pdf="${item.pdfLink}" data-title="${item.name} - ${item.surveyNumber}">
+                        पीडीएफ पहा (View PDF)
+                    </button>`;
+                } else {
+                    pdfButton = '<button class="view-pdf-button" disabled>उपलब्ध नाही (N/A)</button>';
+                }
+                
+                row.innerHTML = `
+                    <td>${item.serialNumber}</td>
+                    <td>${item.taluka}</td>
+                    <td>${item.gav}</td>
+                    <td>${item.type}</td>
+                    <td>${item.name}</td>
+                    <td>${item.year}</td>
+                    <td>${item.surveyNumber}</td>
+                    <td>${item.residential}</td>
+                    <td>${item.commercial}</td>
+                    <td>${item.industrial}</td>
+                    <td>${pdfButton}</td>
+                `;
+                resultsBody.appendChild(row);
+            });
+            
+            // Add event listeners to PDF buttons
+            document.querySelectorAll('.view-pdf-button:not(:disabled)').forEach(button => {
+                button.addEventListener('click', () => {
+                    const pdfUrl = button.getAttribute('data-pdf');
+                    const title = button.getAttribute('data-title');
+                    showPdf(pdfUrl, title);
+                });
+            });
+        }
+    }
+
+    // PDF Viewer Functions
+    function showPdf(url, title) {
+        pdfTitle.textContent = title;
+        
+        // Handle Google Drive links specially
+        if (url.includes('drive.google.com')) {
+            const fileId = url.match(/\/file\/d\/([^/]+)/)[1];
+            const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+            pdfViewer.src = embedUrl;
+        } else {
+            pdfViewer.src = url;
+        }
+        
+        pdfModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+
+    function closePdf() {
+        pdfModal.style.display = 'none';
+        pdfViewer.src = '';
+        document.body.style.overflow = '';
+    }
+
+    closePdfModal.addEventListener('click', closePdf);
+    
+    // Close modal when clicking outside content
+    pdfModal.addEventListener('click', (e) => {
+        if (e.target === pdfModal) {
+            closePdf();
+        }
+    });
+
+    jilhaSelect.addEventListener('change', () => {
+        selectedJilha = jilhaSelect.value;
+        filterData();
+    });
+
+    talukaSelect.addEventListener('change', () => {
+        selectedTaluka = talukaSelect.value;
+        updateGavOptions();
+        updateVarshOptions();
+        filterData();
+    });
+
+    gavSelect.addEventListener('change', () => {
+        selectedGav = gavSelect.value;
+        updateVarshOptions();
+        filterData();
+    });
+
+    varshSelect.addEventListener('change', () => {
+        selectedVarsh = varshSelect.value;
+        filterData();
+    });
+
+    searchButton.addEventListener('click', () => {
+        selectedName = nameSearch.value.trim();
+        filterData();
+    });
+
+    resetButton.addEventListener('click', () => {
+        jilhaSelect.value = '';
+        talukaSelect.value = '';
+        gavSelect.value = '';
+        varshSelect.value = '';
+        nameSearch.value = '';
+        selectedJilha = '';
+        selectedTaluka = '';
+        selectedGav = '';
+        selectedVarsh = '';
+        selectedName = '';
+        populateDropdowns();
+        resultsBody.innerHTML = '';
+    });
+
+    populateDropdowns();
+});
+</script>
+</body>
+</html>
