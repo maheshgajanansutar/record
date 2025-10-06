@@ -1,0 +1,114 @@
+{
+  "landRecords": [
+    {
+      "id": 1,
+      "taluka": "देवगड",
+      "village": "जामसंडे",
+      "division": "बिनशेती (अकृ आदेश १०९६- दुरुस्ती आदेश)",
+      "holderName": "रमाकांत शिवाजी जगताप",
+      "year": 1989,
+      "surveyNo": "४९६ अ१ अ१ अ१ अ१ अ१ अ१ अ१",
+      "type": "निवासी",
+      "downloadLink": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+    },
+    {
+      "id": 2,
+      "taluka": "कणकवली",
+      "village": "कणकवली",
+      "division": "बिनशेती (अकृ आदेश ११२८- दुरुस्ती आदेश)",
+      "holderName": "तुकाराम महादेव बांदल",
+      "year": 1989,
+      "surveyNo": "१७५अ१",
+      "type": "निवासी",
+      "downloadLink": "https://www.africau.edu/images/default/sample.pdf"
+    },
+    {
+      "id": 3,
+      "taluka": "कणकवली",
+      "village": "कणकवली",
+      "division": "बिनशेती (अकृ आदेश १०६३ - दुरुस्ती आदेश)",
+      "holderName": "नारायण बाबू सांडाव",
+      "year": 1989,
+      "surveyNo": "१९९अ१अ",
+      "type": "औद्योगिक",
+      "downloadLink": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+    },
+    {
+      "id": 4,
+      "taluka": "कणकवली",
+      "village": "कणकवली",
+      "division": "बिनशेती (अकृ आदेश ११२३- दुरुस्ती आदेश)",
+      "holderName": "हरिश्चंद्र शंकर परब उर्फ सरांगले",
+      "year": 1988,
+      "surveyNo": "227",
+      "type": "निवासी",
+      "downloadLink": "https://www.africau.edu/images/default/sample.pdf"
+    },
+    {
+      "id": 5,
+      "taluka": "कणकवली",
+      "village": "हळवल",
+      "division": "बिनशेती (अकृ आदेश ११५६- दुरुस्ती आदेश)",
+      "holderName": "श्रीधर विष्णू नाईक",
+      "year": 1989,
+      "surveyNo": "४०अ",
+      "type": "निवासी",
+      "downloadLink": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+    },
+    {
+      "id": 7,
+      "taluka": "मालवण",
+      "village": "कट्टा",
+      "division": "बिनशेती (अकृ आदेश १०४५- दुरुस्ती आदेश)",
+      "holderName": "अंकुश सदाशिव गुराम",
+      "year": 1989,
+      "surveyNo": "623",
+      "type": "वाणिज्य",
+      "downloadLink": "https://www.africau.edu/images/default/sample.pdf"
+    },
+    {
+      "id": 13,
+      "taluka": "कणकवली",
+      "village": "खारेपाटण",
+      "division": "बिनशेती (अकृ आदेश १०३०- दुरुस्ती आदेश)",
+      "holderName": "शिक्षण प्रसारक संस्था खारेपाटण",
+      "year": 1989,
+      "surveyNo": "३८ / ३५",
+      "type": "वाणिज्य",
+      "downloadLink": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+    },
+    {
+      "id": 33,
+      "taluka": "कणकवली",
+      "village": "कणकवली",
+      "division": "बिनशेती (अकृ आदेश ५२०- दुरुस्ती आदेश)",
+      "holderName": "कार्याध्यक्ष कणकवली शिक्षण संस्था कणकवली",
+      "year": 1989,
+      "surveyNo": "२०७अ अ१ अ१ अ१",
+      "type": "वाणिज्य",
+      "downloadLink": "https://www.africau.edu/images/default/sample.pdf"
+    },
+    {
+      "id": 34,
+      "taluka": "कणकवली",
+      "village": "हुंबरठ",
+      "division": "बिनशेती (अकृ आदेश ४८०- दुरुस्ती आदेश)",
+      "holderName": "इकबाल हुसेन इब्राहीम शेख",
+      "year": 1989,
+      "surveyNo": "1314",
+      "type": "औद्योगिक",
+      "downloadLink": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+    },
+    {
+      "id": 42,
+      "taluka": "देवगड",
+      "village": "जामसंडे",
+      "division": "बिनशेती (अकृ आदेश ११४४- दुरुस्ती आदेश)",
+      "holderName": "भास्कर वामन आठवले",
+      "year": 1989,
+      "surveyNo": "४९५अ १अ",
+      "type": "वाणिज्य",
+      "downloadLink": "https://www.africau.edu/images/default/sample.pdf"
+    }
+  ]
+}
