@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>बिनशेती जमीन रेकॉर्ड शोध अनुप्रयोग</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>बिनशेती जमीन रेकॉर्ड शोध अनुप्रयोग</h1>
+            <p class="subtitle">नॉन-एग्रीकल्चरल लँड रेकॉर्ड सर्च सिस्टम</p>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <span class="stat-number" id="totalRecords">0</span>
+                    <span class="stat-label">एकूण नोंदी</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number" id="totalTalukas">0</span>
+                    <span class="stat-label">तालुके</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number" id="totalVillages">0</span>
+                    <span class="stat-label">गावे</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number" id="startYear">0</span>
+                    <span class="stat-label">सुरुवातीचे वर्ष</span>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Error and success messages -->
+        <div id="errorMessage" class="error-message">
+            <i class="fas fa-exclamation-circle"></i> <span id="errorText">त्रुटी आली आहे. कृपया पुन्हा प्रयत्न करा.</span>
+        </div>
+        
+        <div id="successMessage" class="success-message">
+            <i class="fas fa-check-circle"></i> <span id="successText">ऑपरेशन यशस्वी झाले.</span>
+        </div>
+        
+        <section class="search-section">
+            <h2 class="section-title"><i class="fas fa-search"></i> रेकॉर्ड शोधा</h2>
+            <form id="searchForm" class="search-form">
+                <div class="form-group">
+                    <label for="taluka"><i class="fas fa-map-marker-alt"></i> तालुका</label>
+                    <select id="taluka">
+                        <option value="">सर्व तालुके</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="village"><i class="fas fa-home"></i> गाव</label>
+                    <select id="village">
+                        <option value="">सर्व गावे</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="holderName"><i class="fas fa-user"></i> रेखांकन धारकाचे नाव</label>
+                    <input type="text" id="holderName" placeholder="धारकाचे नाव">
+                </div>
+                
+                <div class="form-group">
+                    <label for="surveyNo"><i class="fas fa-hashtag"></i> सर्व्हे क्रमांक</label>
+                    <input type="text" id="surveyNo" placeholder="सर्व्हे क्रमांक">
+                </div>
+                
+                <div class="form-group">
+                    <label for="year"><i class="fas fa-calendar-alt"></i> रेखांकन वर्ष</label>
+                    <select id="year">
+                        <option value="">सर्व वर्ष</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="type"><i class="fas fa-building"></i> बिनशेती प्रकार</label>
+                    <select id="type">
+                        <option value="">सर्व प्रकार</option>
+                        <option value="निवासी">निवासी</option>
+                        <option value="वाणिज्य">वाणिज्य</option>
+                        <option value="औद्योगिक">औद्योगिक</option>
+                    </select>
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit">
+                        <i class="fas fa-search"></i> शोधा
+                    </button>
+                    <button type="button" id="resetBtn" class="reset-btn">
+                        <i class="fas fa-redo"></i> रद्द करा
+                    <button type="button" id="printBtn" class="print-btn">
+                        <i class="fas fa-print"></i> प्रिंट करा
+                    </button>
+                </div>
+            </form>
+        </section>
+        
+        <!-- Loading indicator -->
+        <div id="loadingIndicator" class="loading">
+            <div class="spinner"></div>
+            <p>तुमचा शोध प्रक्रियेत आहे...</p>
+        </div>
+        
+        <section class="results-section" id="resultsSection">
+            <div class="results-header">
+                <h2 class="section-title" style="color: white; margin: 0;"><i class="fas fa-list-alt"></i> शोध परिणाम</h2>
+                <div class="results-count" id="resultsCount">0 नोंदी सापडल्या</div>
+            </div>
+            
+            <div class="table-container">
+                <table id="resultsTable">
+                    <thead>
+                        <tr>
+                            <th>अ.क्र.</th>
+                            <th>तालुका</th>
+                            <th>गाव</th>
+                            <th>रेखांकन धारकाचे नाव</th>
+                            <th>रेखांकन वर्ष</th>
+                            <th>सर्व्हे क्रमांक</th>
+                            <th>बिनशेती प्रकार</th>
+                            <th>डाउनलोड</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsBody">
+                        <!-- Results will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            <div id="pagination" class="pagination" style="display: none;"></div>
+            
+            <div id="noResults" class="no-results" style="display: none;">
+                <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                <p>तुमच्या शोधाशी जुळणारी कोणतीही नोंद सापडली नाही.</p>
+            </div>
+        </section>
+        
+        <!-- PDF Popup -->
+        <div id="pdfPopup" class="pdf-popup">
+            <div class="pdf-popup-content">
+                <div class="pdf-popup-header">
+                    <div class="pdf-popup-title" id="pdfPopupTitle">PDF दस्तऐवज</div>
+                    <button class="pdf-popup-close" id="pdfPopupClose">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="pdf-popup-body">
+                    <iframe id="pdfPopupIframe" class="pdf-popup-iframe" src=""></iframe>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 बिनशेती जमीन रेकॉर्ड शोध अनुप्रयोग. सर्व हक्क राखीव.</p>
+            <p style="margin-top: 10px; font-size: 0.8rem; opacity: 0.7;">महाराष्ट्र सरकार | जमीन अभिलेख विभाग</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
