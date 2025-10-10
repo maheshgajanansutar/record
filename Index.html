@@ -6,7 +6,625 @@
     <title>बिनशेती जमीन रेकॉर्ड शोध अनुप्रयोग</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #f72585;
+            --accent: #4cc9f0;
+            --success: #4ade80;
+            --warning: #f59e0b;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --darker: #0f172a;
+            --gray: #64748b;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 30px 40px;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary));
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 25px;
+            font-weight: 400;
+            color: white !important;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 25px;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 20px 25px;
+            border-radius: var(--radius);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+            min-width: 150px;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: white;
+            display: block;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .search-section {
+            background: white;
+            padding: 40px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: var(--dark);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        .search-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 1.1rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 16px 20px;
+            background: var(--light);
+            border: 2px solid #e2e8f0;
+            border-radius: var(--radius);
+            font-size: 16px;
+            color: var(--dark);
+            transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+            transform: translateY(-2px);
+        }
+
+        input::placeholder {
+            color: var(--gray);
+            font-weight: 400;
+        }
+
+        .button-group {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 18px 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.4);
+        }
+
+        .reset-btn {
+            background: linear-gradient(135deg, var(--secondary) 0%, #e11d8b 100%);
+            box-shadow: 0 5px 15px rgba(247, 37, 133, 0.3);
+        }
+
+        .reset-btn:hover {
+            box-shadow: 0 10px 20px rgba(247, 37, 133, 0.4);
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, var(--success) 0%, #22c55e 100%);
+            box-shadow: 0 5px 15px rgba(74, 222, 128, 0.3);
+        }
+
+        .download-btn:hover {
+            box-shadow: 0 10px 20px rgba(74, 222, 128, 0.4);
+        }
+
+        .print-btn {
+            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .print-btn:hover {
+            box-shadow: 0 10px 20px rgba(245, 158, 11, 0.4);
+        }
+
+        .results-section {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: none;
+            margin-bottom: 40px;
+        }
+
+        .results-header {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--darker) 100%);
+            color: white;
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .results-count {
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 18px 20px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #f1f5f9;
+            font-weight: 600;
+            color: var(--dark);
+            position: sticky;
+            top: 0;
+            font-size: 1.1rem;
+        }
+
+        tr {
+            transition: var(--transition);
+        }
+
+        tr:hover {
+            background: #f8fafc;
+            transform: translateX(5px);
+        }
+
+        .download-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 10px 18px;
+            border-radius: 50px;
+            background: rgba(67, 97, 238, 0.1);
+        }
+
+        .download-link:hover {
+            background: rgba(67, 97, 238, 0.2);
+            transform: scale(1.05);
+        }
+
+        .no-results {
+            padding: 60px 40px;
+            text-align: center;
+            color: var(--gray);
+            font-size: 1.2rem;
+        }
+
+        /* PDF Popup Styles - COMPLETELY FIXED */
+        .pdf-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pdf-popup-content {
+            background: white;
+            border-radius: 12px;
+            width: 95%;
+            height: 95%;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .pdf-popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            border-bottom: 2px solid #e2e8f0;
+            background: #f8fafc;
+            min-height: 70px;
+        }
+
+        .pdf-popup-title {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 1.3rem;
+            margin: 0;
+        }
+
+        .pdf-popup-close {
+            background: #ef4444;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: white;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .pdf-popup-close:hover {
+            background: #dc2626;
+            transform: scale(1.1);
+        }
+
+        .pdf-popup-body {
+            flex: 1;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .pdf-popup-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Ensure body doesn't scroll when popup is open */
+        body {
+            overflow: auto;
+        }
+
+        body.popup-open {
+            overflow: hidden;
+        }
+
+        /* Ensure popup is above everything */
+        .pdf-popup * {
+            pointer-events: auto;
+        }
+
+        .pdf-popup-close {
+            pointer-events: auto !important;
+        }
+
+        /* Loading indicator */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .spinner {
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 5px solid var(--primary);
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Error message */
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid #ef4444;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+            display: none;
+        }
+
+        /* Success message */
+        .success-message {
+            background: rgba(74, 222, 128, 0.1);
+            border-left: 4px solid var(--success);
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+            display: none;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 10px;
+        }
+
+        .pagination button {
+            padding: 10px 16px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .pagination button.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .pagination button:hover:not(.active) {
+            background: var(--light);
+        }
+
+        /* Print styles */
+        @media print {
+            header, .search-section, footer, .button-group, .download-link {
+                display: none !important;
+            }
+            
+            .results-section {
+                box-shadow: none !important;
+                display: block !important;
+            }
+            
+            .results-header {
+                background: #f1f5f9 !important;
+                color: var(--dark) !important;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .search-form {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+            
+            th, td {
+                padding: 14px 16px;
+                font-size: 14px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .stats {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .stat-box {
+                min-width: 120px;
+                padding: 15px 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .search-section, header {
+                padding: 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .stat-box {
+                min-width: calc(50% - 10px);
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Animation for results appearance */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .results-section {
+            animation: fadeInUp 0.5s ease-out;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -93,8 +711,6 @@
                     </button>
                     <button type="button" id="resetBtn" class="reset-btn">
                         <i class="fas fa-redo"></i> रद्द करा
-                    <button type="button" id="printBtn" class="print-btn">
-                        <i class="fas fa-print"></i> प्रिंट करा
                     </button>
                 </div>
             </form>
@@ -143,25 +759,558 @@
         
         <!-- PDF Popup -->
         <div id="pdfPopup" class="pdf-popup">
-            <div class="pdf-popup-content">
-                <div class="pdf-popup-header">
-                    <div class="pdf-popup-title" id="pdfPopupTitle">PDF दस्तऐवज</div>
-                    <button class="pdf-popup-close" id="pdfPopupClose">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="pdf-popup-body">
-                    <iframe id="pdfPopupIframe" class="pdf-popup-iframe" src=""></iframe>
-                </div>
+          <div class="pdf-popup-content">
+            <div class="pdf-popup-header">
+              <div class="pdf-popup-title" id="pdfPopupTitle">PDF</div>
+              <button class="pdf-popup-close" id="pdfPopupClose" type="button" aria-label="Close PDF" role="button">
+                <i class="fas fa-times"></i>
+              </button>
             </div>
+            <div class="pdf-popup-body">
+              <iframe id="pdfPopupIframe" class="pdf-popup-iframe" src=""></iframe>
+            </div>
+          </div>
         </div>
-        
+          
         <footer>
             <p>© 2023 बिनशेती जमीन रेकॉर्ड शोध अनुप्रयोग. सर्व हक्क राखीव.</p>
             <p style="margin-top: 10px; font-size: 0.8rem; opacity: 0.7;">महाराष्ट्र सरकार | जमीन अभिलेख विभाग</p>
         </footer>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // Global variables
+        let landRecords = [];
+        let currentPage = 1;
+        const recordsPerPage = 10;
+
+        // Land records data
+        const jsonData = {
+          "landRecords": [
+            {
+              "id": 1,
+              "taluka": "देवगड",
+              "village": "जामसंडे",
+              "division": "बिनशेती (अकृ आदेश १०९६- दुरुस्ती आदेश)",
+              "holderName": "रमाकांत शिवाजी जगताप",
+              "year": 1989,
+              "surveyNo": "४९६ अ१ अ१ अ१ अ१ अ१ अ१ अ१",
+              "type": "निवासी",
+              "downloadLink": "data/pdfs/SR360(1989).pdf"
+            },
+            {
+              "id": 2,
+              "taluka": "कणकवली",
+              "village": "कणकवली",
+              "division": "बिनशेती (अकृ आदेश ११२८- दुरुस्ती आदेश)",
+              "holderName": "तुकाराम महादेव बांदल",
+              "year": 1989,
+              "surveyNo": "१७५अ१",
+              "type": "निवासी",
+              "downloadLink": "data/pdfs/SR480(1989).pdf"
+            },
+            {
+              "id": 3,
+              "taluka": "कणकवली",
+              "village": "कणकवली",
+              "division": "बिनशेती (अकृ आदेश १०६३ - दुरुस्ती आदेश)",
+              "holderName": "नारायण बाबू सांडाव",
+              "year": 1989,
+              "surveyNo": "१९९अ१अ",
+              "type": "निवासी",
+              "Column10": "औद्योगिक",
+              "downloadLink": "data/pdfs/SR520(1989).pdf"
+            },
+            {
+              "id": 4,
+              "taluka": "कणकवली",
+              "village": "कणकवली",
+              "division": "बिनशेती (अकृ आदेश ११२३- दुरुस्ती आदेश)",
+              "holderName": "हरिश्चंद्र शंकर परब उर्फ सरांगले",
+              "year": 1988,
+              "surveyNo": "227",
+              "type": "निवासी",
+              "downloadLink": "data/pdfs/SR704(1989).pdf"
+            },
+            {
+              "id": 5,
+              "taluka": "कणकवली",
+              "village": "हळवल",
+              "division": "बिनशेती (अकृ आदेश ११५६- दुरुस्ती आदेश)",
+              "holderName": "श्रीधर विष्णू नाईक",
+              "year": 1989,
+              "surveyNo": "४०अ",
+              "type": "निवासी",
+              "downloadLink": "data/pdfs/SR762(1989).pdf"
+            },
+            {
+              "id": 6,
+              "taluka": "देवगड",
+              "village": "जामसंडे",
+              "division": "बिनशेती (अकृ आदेश १०५०- दुरुस्ती आदेश)",
+              "holderName": "वामन विश्वनाथ बोंडळे",
+              "year": 1989,
+              "surveyNo": "417",
+              "type": "निवासी",
+              "downloadLink": "data/pdfs/SR839(1989).pdf"
+            },
+            {
+              "id": 7,
+              "taluka": "मालवण",
+              "village": "कट्टा",
+              "division": "बिनशेती (अकृ आदेश १०४५- दुरुस्ती आदेश)",
+              "holderName": "अंकुश सदाशिव गुराम",
+              "year": 1989,
+              "surveyNo": "623",
+              "type": "निवासी",
+              "Column9": "वाणिज्य",
+              "downloadLink": "data/pdfs/SR880(1989).pdf"
+            },
+            {
+              "id": 8,
+              "taluka": "कणकवली",
+              "village": "सांगवे",
+              "division": "बिनशेती (अकृ आदेश १०३३- दुरुस्ती आदेश)",
+              "holderName": "दत्तराम लाडू सावंत",
+              "year": 1989,
+              "surveyNo": "79",
+              "type": "निवासी",
+              "downloadLink": "data/pdfs/SR882(1989).pdf"
+            },
+            {
+              "id": 9,
+              "taluka": "कणकवली",
+              "village": "कणकवली",
+              "division": "बिनशेती (अकृ आदेश १०२४- दुरुस्ती आदेश)",
+              "holderName": "बाळकृष्ण गणपत रावराणे",
+              "year": 1989,
+              "surveyNo": "196",
+              "type": "निवासी",
+              "downloadLink": "data/pdfs/SR890(1989).pdf"
+            },
+            {
+              "id": 10,
+              "taluka": "मालवण",
+              "village": "मालवण",
+              "division": "बिनशेती (अकृ आदेश १००५- दुरुस्ती आदेश)",
+              "holderName": "रामचंद्र भीमराव पाटील",
+              "year": 1989,
+              "surveyNo": "888",
+              "type": "निवासी",
+              "downloadLink": "data/pdfs/SR927(1989).pdf"
+            }
+          ]
+        };
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadLandRecords();
+            
+            // Set up form submission
+            document.getElementById('searchForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                performSearch();
+            });
+            
+            // Set up reset button
+            document.getElementById('resetBtn').addEventListener('click', function() {
+                document.getElementById('searchForm').reset();
+                document.getElementById('resultsSection').style.display = 'none';
+            });
+            
+            // Set up PDF popup close button
+            document.getElementById('pdfPopupClose').addEventListener('click', function() {
+                closePdfPopup();
+            });
+            
+            // Close PDF popup when clicking outside
+            document.getElementById('pdfPopup').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closePdfPopup();
+                }
+            });
+            
+            // Set up taluka-village dependency
+            document.getElementById('taluka').addEventListener('change', function() {
+                updateVillages();
+            });
+            
+            // Add keyboard navigation support
+            document.addEventListener('keydown', function(e) {
+                // Close PDF popup on Escape key
+                if (e.key === 'Escape') {
+                    closePdfPopup();
+                }
+                
+                // Submit form on Ctrl+Enter
+                if (e.ctrlKey && e.key === 'Enter') {
+                    document.getElementById('searchForm').dispatchEvent(new Event('submit'));
+                }
+            });
+            
+            // Add input validation
+            document.getElementById('holderName').addEventListener('input', function(e) {
+                // Allow only letters, spaces, and Marathi characters
+                this.value = this.value.replace(/[^a-zA-Z\u0900-\u097F\s]/g, '');
+            });
+            
+            document.getElementById('surveyNo').addEventListener('input', function(e) {
+                // Allow only alphanumeric characters and common survey number symbols
+                this.value = this.value.replace(/[^a-zA-Z0-9\u0900-\u097F\/\-\.\s]/g, '');
+            });
+        });
+
+        // Load land records from embedded JSON data
+        function loadLandRecords() {
+            showLoading();
+            
+            try {
+                landRecords = jsonData.landRecords;
+                
+                // Populate dropdowns
+                populateDropdowns();
+                
+                // Update statistics
+                updateStatistics();
+                
+                hideLoading();
+                showSuccess('डेटा यशस्वीरित्या लोड झाला');
+            } catch (error) {
+                hideLoading();
+                showError('डेटा लोड करण्यात अयशस्वी: ' + error.message);
+                console.error('Error loading data:', error);
+            }
+        }
+
+        // Update statistics in header
+        function updateStatistics() {
+            document.getElementById('totalRecords').textContent = landRecords.length;
+            
+            const talukas = [...new Set(landRecords.map(record => record.taluka))];
+            document.getElementById('totalTalukas').textContent = talukas.length;
+            
+            const villages = [...new Set(landRecords.map(record => record.village))];
+            document.getElementById('totalVillages').textContent = villages.length;
+            
+            const years = landRecords.map(record => record.year);
+            const startYear = Math.min(...years);
+            document.getElementById('startYear').textContent = startYear;
+        }
+
+        // Populate dropdowns with unique values
+        function populateDropdowns() {
+            const talukaSelect = document.getElementById('taluka');
+            const villageSelect = document.getElementById('village');
+            const yearSelect = document.getElementById('year');
+            
+            // Get unique values
+            const talukas = [...new Set(landRecords.map(record => record.taluka))];
+            const villages = [...new Set(landRecords.map(record => record.village))];
+            const years = [...new Set(landRecords.map(record => record.year))].sort((a, b) => b - a);
+            
+            // Populate talukas
+            talukas.forEach(taluka => {
+                const option = document.createElement('option');
+                option.value = taluka;
+                option.textContent = taluka;
+                talukaSelect.appendChild(option);
+            });
+            
+            // Populate villages
+            villages.forEach(village => {
+                const option = document.createElement('option');
+                option.value = village;
+                option.textContent = village;
+                villageSelect.appendChild(option);
+            });
+            
+            // Populate years
+            years.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearSelect.appendChild(option);
+            });
+        }
+
+        // Update villages based on selected taluka
+        function updateVillages() {
+            const talukaSelect = document.getElementById('taluka');
+            const villageSelect = document.getElementById('village');
+            const selectedTaluka = talukaSelect.value;
+            
+            // Clear current options except the first one
+            while (villageSelect.options.length > 1) {
+                villageSelect.remove(1);
+            }
+            
+            // If a taluka is selected, filter villages
+            if (selectedTaluka) {
+                const villages = [...new Set(
+                    landRecords
+                        .filter(record => record.taluka === selectedTaluka)
+                        .map(record => record.village)
+                )];
+                
+                villages.forEach(village => {
+                    const option = document.createElement('option');
+                    option.value = village;
+                    option.textContent = village;
+                    villageSelect.appendChild(option);
+                });
+            } else {
+                // If no taluka selected, show all villages
+                const allVillages = [...new Set(landRecords.map(record => record.village))];
+                allVillages.forEach(village => {
+                    const option = document.createElement('option');
+                    option.value = village;
+                    option.textContent = village;
+                    villageSelect.appendChild(option);
+                });
+            }
+        }
+
+        // Perform search based on form inputs
+        function performSearch() {
+            showLoading();
+            
+            // Simulate API delay
+            setTimeout(() => {
+                try {
+                    const taluka = document.getElementById('taluka').value;
+                    const village = document.getElementById('village').value;
+                    const holderName = document.getElementById('holderName').value.toLowerCase();
+                    const surveyNo = document.getElementById('surveyNo').value.toLowerCase();
+                    const year = document.getElementById('year').value;
+                    const type = document.getElementById('type').value;
+                    
+                    // Filter records based on search criteria
+                    const filteredRecords = landRecords.filter(record => {
+                        return (!taluka || record.taluka === taluka) &&
+                               (!village || record.village === village) &&
+                               (!holderName || record.holderName.toLowerCase().includes(holderName)) &&
+                               (!surveyNo || record.surveyNo.toLowerCase().includes(surveyNo)) &&
+                               (!year || record.year == year) &&
+                               (!type || record.type === type);
+                    });
+                    
+                    // Display results
+                    displayResults(filteredRecords);
+                    hideLoading();
+                    
+                    if (filteredRecords.length > 0) {
+                        showSuccess(`${filteredRecords.length} नोंदी सापडल्या`);
+                    }
+                } catch (error) {
+                    hideLoading();
+                    showError('शोध प्रक्रिया अयशस्वी झाली. कृपया पुन्हा प्रयत्न करा.');
+                    console.error('Search error:', error);
+                }
+            }, 1000); // Simulate 1 second delay
+        }
+
+        // Display search results in the table
+        function displayResults(records) {
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsBody = document.getElementById('resultsBody');
+            const resultsCount = document.getElementById('resultsCount');
+            const noResults = document.getElementById('noResults');
+            const pagination = document.getElementById('pagination');
+            
+            // Show results section
+            resultsSection.style.display = 'block';
+            
+            // Clear current results
+            resultsBody.innerHTML = '';
+            
+            // Update results count
+            resultsCount.textContent = `${records.length} नोंदी सापडल्या`;
+            
+            // Show/hide no results message
+            if (records.length === 0) {
+                noResults.style.display = 'block';
+                pagination.style.display = 'none';
+            } else {
+                noResults.style.display = 'none';
+                
+                // Calculate pagination
+                const totalPages = Math.ceil(records.length / recordsPerPage);
+                currentPage = 1;
+                
+                // Display pagination if needed
+                if (records.length > recordsPerPage) {
+                    displayPagination(totalPages, records);
+                    pagination.style.display = 'flex';
+                } else {
+                    pagination.style.display = 'none';
+                }
+                
+                // Display first page
+                displayPage(records, 1);
+            }
+        }
+
+        // Display a specific page of results
+        function displayPage(records, page) {
+            const resultsBody = document.getElementById('resultsBody');
+            const startIndex = (page - 1) * recordsPerPage;
+            const endIndex = Math.min(startIndex + recordsPerPage, records.length);
+            const pageRecords = records.slice(startIndex, endIndex);
+            
+            // Clear current results
+            resultsBody.innerHTML = '';
+            
+            // Add records to table
+            pageRecords.forEach((record, index) => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${startIndex + index + 1}</td>
+                    <td>${record.taluka}</td>
+                    <td>${record.village}</td>
+                    <td>${record.holderName}</td>
+                    <td>${record.year}</td>
+                    <td>${record.surveyNo}</td>
+                    <td>${record.type}</td>
+                    <td>
+                        <a class="download-link" data-pdf-link="${record.downloadLink}" data-record-name="${record.holderName} - ${record.surveyNo}">
+                            <i class="fas fa-file-pdf"></i> डाउनलोड
+                        </a>
+                    </td>
+                `;
+                
+                resultsBody.appendChild(row);
+            });
+            
+            // Add event listeners to download links
+            document.querySelectorAll('.download-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pdfLink = this.getAttribute('data-pdf-link');
+                    const recordName = this.getAttribute('data-record-name');
+                    openPdfPopup(pdfLink, recordName);
+                });
+            });
+        }
+
+        // Display pagination controls
+        function displayPagination(totalPages, records) {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+            
+            // Previous button
+            const prevButton = document.createElement('button');
+            prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            prevButton.disabled = currentPage === 1;
+            prevButton.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    displayPage(records, currentPage);
+                    displayPagination(totalPages, records);
+                }
+            });
+            pagination.appendChild(prevButton);
+            
+            // Page buttons
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.textContent = i;
+                pageButton.classList.toggle('active', i === currentPage);
+                pageButton.addEventListener('click', () => {
+                    currentPage = i;
+                    displayPage(records, currentPage);
+                    displayPagination(totalPages, records);
+                });
+                pagination.appendChild(pageButton);
+            }
+            
+            // Next button
+            const nextButton = document.createElement('button');
+            nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            nextButton.disabled = currentPage === totalPages;
+            nextButton.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    displayPage(records, currentPage);
+                    displayPagination(totalPages, records);
+                }
+            });
+            pagination.appendChild(nextButton);
+        }
+
+        // Open PDF in popup
+        function openPdfPopup(pdfLink, recordName) {
+            const pdfPopup = document.getElementById('pdfPopup');
+            const pdfPopupIframe = document.getElementById('pdfPopupIframe');
+            const pdfPopupTitle = document.getElementById('pdfPopupTitle');
+
+            // Focus close button for easy tap/keyboard
+            setTimeout(() => { 
+                const btn = document.getElementById('pdfPopupClose'); 
+                if (btn) btn.focus(); 
+            }, 50);
+
+            // Set PDF title
+            if (pdfPopupTitle) pdfPopupTitle.textContent = recordName || 'PDF';
+
+            // Set PDF source
+            if (pdfPopupIframe) pdfPopupIframe.src = pdfLink;
+
+            // Show popup
+            if (pdfPopup) pdfPopup.style.display = 'flex';
+
+            // Prevent body scrolling
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close PDF popup
+        function closePdfPopup() {
+            const pdfPopup = document.getElementById('pdfPopup');
+            const pdfPopupIframe = document.getElementById('pdfPopupIframe');
+            
+            // Hide popup
+            if (pdfPopup) pdfPopup.style.display = 'none';
+            
+            // Clear iframe source
+            if (pdfPopupIframe) pdfPopupIframe.src = '';
+            
+            // Restore body scrolling
+            document.body.style.overflow = 'auto';
+        }
+
+        // Show loading indicator
+        function showLoading() {
+            document.getElementById('loadingIndicator').style.display = 'block';
+        }
+
+        // Hide loading indicator
+        function hideLoading() {
+            document.getElementById('loadingIndicator').style.display = 'none';
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            document.getElementById('errorText').textContent = message;
+            errorElement.style.display = 'block';
+            
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 5000);
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            const successElement = document.getElementById('successMessage');
+            document.getElementById('successText').textContent = message;
+            successElement.style.display = 'block';
+            
+            // Auto hide after 3 seconds
+            setTimeout(() => {
+                successElement.style.display = 'none';
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
